@@ -15,6 +15,14 @@ export type OrderItem = MenuItem & {
 };
 
 type PaymentMethod = 'efectivo' | 'tarjeta' | 'transferencia';
+type OrderStatus = 'preparando' | 'en_camino' | 'entregado';
+type Order = {
+  id: string;
+  items: OrderItem[];
+  total: number;
+  status: OrderStatus;
+  createdAt: Date;
+};
 
 const initialMenuItems: MenuItem[] = [
   { id: 1, name: 'Hamburguesa Clásica', price: 8.99, image: 'public/img/Hamburguesa1.jpg', category: 'rapida' },
@@ -30,6 +38,7 @@ function App() {
   const [filter, setFilter] = useState<'todos' | 'rapida' | 'menu'>('todos');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('tarjeta');
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
   const [cardNumber, setCardNumber] = useState('');
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
@@ -70,16 +79,38 @@ function App() {
     setShowPaymentModal(true);
   };
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Simular procesamiento de pago
     setTimeout(() => {
       setPaymentConfirmed(true);
+      
+      // Crear el pedido
+      const newOrder: Order = {
+        id: Math.random().toString(36).substr(2, 9),
+        items: [...cart],
+        total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
+        status: 'preparando',
+        createdAt: new Date()
+      };
+      
+      setCurrentOrder(newOrder);
+      
       setTimeout(() => {
         setPaymentConfirmed(false);
         setShowPaymentModal(false);
         setCart([]);
         localStorage.removeItem('cart');
+        
+        // Simular cambio de estado después de 5 segundos
+        setTimeout(() => {
+          setCurrentOrder(prev => prev ? {...prev, status: 'en_camino'} : null);
+        }, 5000);
+        
+        // Simular entrega después de 10 segundos
+        setTimeout(() => {
+          setCurrentOrder(prev => prev ? {...prev, status: 'entregado'} : null);
+        }, 10000);
       }, 2000);
     }, 1500);
   };
@@ -116,64 +147,64 @@ function App() {
       </section>
 
       <section className="cart">
-  <h2>Carrito ({cart.length})</h2>
-  {cart.length === 0 ? (
-    <p>No hay items en el carrito</p>
-  ) : (
-    <>
-      <div className="cart-table-container">
-        <table className="cart-table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.map(item => (
-              <tr key={item.id} className="cart-item">
-                <td>
-                  <div className="cart-item-info">
-                    <img src={item.image} alt={item.name} className="cart-image" />
-                    <span>{item.name}</span>
-                  </div>
-                </td>
-                <td>
-                  <div className="quantity-controls">
-                    <button onClick={() => changeQuantity(item.id, -1)}>-</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => changeQuantity(item.id, 1)}>+</button>
-                  </div>
-                </td>
-                <td>S/.{(item.price * item.quantity).toFixed(2)}</td>
-                <td>
-                  <button 
-                    onClick={() => removeFromCart(item.id)} 
-                    className="remove-btn"
-                    aria-label="Eliminar"
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="cart-total">
-              <td colSpan={2}>Total:</td>
-              <td colSpan={2}>S/.{total.toFixed(2)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <button className="checkout-btn" onClick={handleCheckout}>
-        Confirmar Pedido
-      </button>
-    </>
-  )}
-</section>
+        <h2>Carrito ({cart.length})</h2>
+        {cart.length === 0 ? (
+          <p>No hay items en el carrito</p>
+        ) : (
+          <>
+            <div className="cart-table-container">
+              <table className="cart-table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.map(item => (
+                    <tr key={item.id} className="cart-item">
+                      <td>
+                        <div className="cart-item-info">
+                          <img src={item.image} alt={item.name} className="cart-image" />
+                          <span>{item.name}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="quantity-controls">
+                          <button onClick={() => changeQuantity(item.id, -1)}>-</button>
+                          <span>{item.quantity}</span>
+                          <button onClick={() => changeQuantity(item.id, 1)}>+</button>
+                        </div>
+                      </td>
+                      <td>S/.{(item.price * item.quantity).toFixed(2)}</td>
+                      <td>
+                        <button 
+                          onClick={() => removeFromCart(item.id)} 
+                          className="remove-btn"
+                          aria-label="Eliminar"
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="cart-total">
+                    <td colSpan={2}>Total:</td>
+                    <td colSpan={2}>S/.{total.toFixed(2)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <button className="checkout-btn" onClick={handleCheckout}>
+              Confirmar Pedido
+            </button>
+          </>
+        )}
+      </section>
 
       {/* Modal de Pago */}
       {showPaymentModal && (
@@ -242,6 +273,53 @@ function App() {
                 <p>Tu pedido está siendo preparado.</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Estado del Pedido */}
+      {currentOrder && (
+        <div className="order-status-modal">
+          <div className="order-status-container">
+            <h2>Estado de tu Pedido #{currentOrder.id}</h2>
+            
+            <div className="status-timeline">
+              <div className={`status-step ${currentOrder.status === 'preparando' ? 'active' : ''} ${currentOrder.status === 'en_camino' || currentOrder.status === 'entregado' ? 'completed' : ''}`}>
+                <div className="step-icon">👨‍🍳</div>
+                <div className="step-label">Preparando</div>
+              </div>
+              
+              <div className={`status-step ${currentOrder.status === 'en_camino' ? 'active' : ''} ${currentOrder.status === 'entregado' ? 'completed' : ''}`}>
+                <div className="step-icon">🚚</div>
+                <div className="step-label">En camino</div>
+              </div>
+              
+              <div className={`status-step ${currentOrder.status === 'entregado' ? 'active' : ''}`}>
+                <div className="step-icon">✅</div>
+                <div className="step-label">Entregado</div>
+              </div>
+            </div>
+            
+            <div className="order-details">
+              <h3>Detalles del pedido:</h3>
+              <ul>
+                {currentOrder.items.map(item => (
+                  <li key={item.id}>
+                    {item.name} x {item.quantity} - S/.{(item.price * item.quantity).toFixed(2)}
+                  </li>
+                ))}
+              </ul>
+              <div className="order-total">
+                Total: S/.{currentOrder.total.toFixed(2)}
+              </div>
+            </div>
+            
+            <button 
+              className="close-status-btn" 
+              onClick={() => setCurrentOrder(null)}
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}
