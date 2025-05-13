@@ -25,10 +25,10 @@ type Order = {
 };
 
 const initialMenuItems: MenuItem[] = [
-  { id: 1, name: 'Hamburguesa Clásica', price: 8.99, image: '../public/img/Hamburguesa1.jpg', category: 'rapida' },
-  { id: 2, name: 'Papas Fritas', price: 3.5, image: '../public/img/papasfritas.jpg', category: 'rapida' },
-  { id: 3, name: 'Refresco', price: 1.99, image: '../public/img/soda.jpg', category: 'rapida' },
-  { id: 4, name: 'Menú del Día: Pollo', price: 12.99, image: '../public/img/polloarroz.jpg', category: 'menu' },
+  { id: 1, name: 'Hamburguesa Clásica', price: 8.99, image: '../public/img/Hamburguesa1.png', category: 'rapida' },
+  { id: 2, name: 'Papas Fritas', price: 3.5, image: '../public/img/papasfritas.png', category: 'rapida' },
+  { id: 3, name: 'Refresco', price: 1.99, image: '../public/img/soda.png', category: 'rapida' },
+  { id: 4, name: 'Menú del Día: Pollo', price: 12.99, image: '../public/img/polloarroz.png', category: 'menu' },
 ];
 
 function App() {
