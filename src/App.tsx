@@ -29,6 +29,12 @@ const initialMenuItems: MenuItem[] = [
   { id: 2, name: 'Papas Fritas', price: 3.5, image: '/img/papasfritas.png', category: 'rapida' },
   { id: 3, name: 'Refresco', price: 1.99, image: '/img/soda.png', category: 'rapida' },
   { id: 4, name: 'Menú del Día: Pollo', price: 12.99, image: '/img/polloconarroz.png', category: 'menu' },
+  { id: 5, name: 'Pizza Personal', price: 9.5, image: '/img/pizza.png', category: 'rapida' },
+  { id: 6, name: 'Hot Dog', price: 4.5, image: '/img/hotdog.png', category: 'rapida' },
+  { id: 7, name: 'Jugo Natural', price: 2.5, image: '/img/jugo.png', category: 'rapida' },
+  { id: 8, name: 'Menú del Día: Lomo Saltado', price: 14.99, image: '/img/lomosaltado.png', category: 'menu' },
+  { id: 9, name: 'Sopa Criolla', price: 5.5, image: '/img/sopa.png', category: 'menu' },
+  { id: 10, name: 'Postre del Día', price: 4.0, image: '/img/postre.png', category: 'menu' },
 ];
 
 
