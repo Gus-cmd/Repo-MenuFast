@@ -25,14 +25,15 @@ type Order = {
 };
 
 const initialMenuItems: MenuItem[] = [
-  { id: 1, name: 'Hamburguesa Clásica', price: 8.99, image: '../public/img/Hamburguesa1.png', category: 'rapida' },
-  { id: 2, name: 'Papas Fritas', price: 3.5, image: '../public/img/papasfritas.png', category: 'rapida' },
-  { id: 3, name: 'Refresco', price: 1.99, image: '../public/img/soda.png', category: 'rapida' },
-  { id: 4, name: 'Menú del Día: Pollo', price: 12.99, image: '../public/img/polloarroz.png', category: 'menu' },
+  { id: 1, name: 'Hamburguesa Clásica', price: 8.99, image: '/img/hamburguesa1.png', category: 'rapida' },
+  { id: 2, name: 'Papas Fritas', price: 3.5, image: '/img/papasfritas.png', category: 'rapida' },
+  { id: 3, name: 'Refresco', price: 1.99, image: '/img/soda.png', category: 'rapida' },
+  { id: 4, name: 'Menú del Día: Pollo', price: 12.99, image: '/img/polloconarroz.png', category: 'menu' },
 ];
 
+
 function App() {
-  const logo = '../public/img/logo de menufast icono2.png';
+  const logo = '/img/logomenufast.png';
   const [menuItems] = useState<MenuItem[]>(initialMenuItems);
   const [cart, setCart] = useState<OrderItem[]>([]);
   const [filter, setFilter] = useState<'todos' | 'rapida' | 'menu'>('todos');
